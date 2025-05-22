@@ -61,4 +61,25 @@ public class Customer {
         return infrequentCategories.get(random.nextInt(infrequentCategories.size()));
 
     }
+    public Currency getRandomSuspiciousCurrency() {
+
+        // Get all categories from the enum
+
+        List<Currency> allCurrency = List.of(Currency.values());
+
+        // Filter out frequent categories
+
+        List<Currency> infrequentCurrency = allCurrency.stream()
+
+                .filter(currency -> !(preferredCurrency == currency))
+
+                .toList();
+
+        // Pick a random category from the remaining ones
+
+        Random random = new Random();
+
+        return infrequentCurrency.get(random.nextInt(infrequentCurrency.size()));
+
+    }
 }
