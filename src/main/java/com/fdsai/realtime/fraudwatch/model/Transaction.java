@@ -12,13 +12,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
+
+import static com.fdsai.realtime.fraudwatch.enums.Merchant.getRandomMerchant;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "transactions")
 public class Transaction {
+
     @Id
     private String id;
+
     @JsonProperty("transaction_id")
     private String transactionId;
+
     private String userId;
     private double amount;
     private Currency currency;
@@ -26,10 +32,24 @@ public class Transaction {
     private Merchant merchant;
     private Category category;
     private boolean isFraud;
-    private float[] embedding = {};
+    private float[] embedding = new float[]{};
 
     public Transaction() {}
 
+    public Transaction(String id, String transactionId, String userId, double amount, Currency currency,
+                       Instant timestamp, Merchant merchant, Category category, boolean isFraud) {
+        this.id = id;
+        this.transactionId = transactionId;
+        this.userId = userId;
+        this.amount = amount;
+        this.currency = currency;
+        this.timestamp = timestamp;
+        this.merchant = merchant;
+        this.category = category;
+        this.isFraud = isFraud;
+    }
+
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -110,4 +130,44 @@ public class Transaction {
         this.embedding = embedding;
     }
 
+    /**
+     * Generates a text representation for embedding models.
+     */
+    public String generateEmbeddingText() {
+        return userId + " " + amount + " " + currency + " " + merchant + " " + category;
+    }
+
+    /**
+     * Generate a synthetic random transaction for a given customer profile.
+     */
+    public static Transaction generateRandom(Customer customer) {
+        Random random = new Random();
+        boolean isSuspicious = random.nextDouble() < 0.1;
+
+        double amount = isSuspicious
+                ? customer.getMeanSpending() * (2.0 + random.nextDouble())
+                : customer.getMeanSpending() * (0.5 + random.nextDouble());
+
+        Category category = isSuspicious
+                ? customer.getUnfrequentCategory()
+                : customer.getFrequentCategory();
+
+        Merchant merchant = getRandomMerchant(category);
+
+        Currency currency = isSuspicious
+                ? customer.getRandomSuspiciousCurrency()
+                : customer.getPreferredCurrency();
+
+        return new Transaction(
+                null,
+                UUID.randomUUID().toString(),
+                customer.getUserId(),
+                amount,
+                currency,
+                Instant.now(),
+                merchant,
+                category,
+                false // actual fraud detection will override this
+        );
+    }
 }
