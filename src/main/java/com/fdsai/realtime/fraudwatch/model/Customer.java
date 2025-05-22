@@ -36,5 +36,8 @@ public class Customer {
     public Double getMeanSpending() { return meanSpending; }
     public Double getSpendingStdDev() { return spendingStdDev; }
     public Currency getPreferredCurrency() { return preferredCurrency; }
-
+    public Category getFrequentCategory() {
+        Random random = new Random();
+        return categories.get(random.nextInt(categories.size()));
+    }
 }
