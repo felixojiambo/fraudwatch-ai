@@ -30,7 +30,6 @@ public class OpenAIConfig {
                 .apiKey(apiKey)
                 .build();
     }
-
     /**
      * Create an EmbeddingModel backed by the OpenAI embeddings endpoint.
      */
