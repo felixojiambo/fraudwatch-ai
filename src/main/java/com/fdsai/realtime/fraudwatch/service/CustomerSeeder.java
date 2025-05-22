@@ -31,7 +31,6 @@ public class CustomerSeeder {
     }
 
     @PostConstruct
-
     public void seedCustomers() {
 
         if (mongoTemplate.getCollection("customers").countDocuments() > 0) {
