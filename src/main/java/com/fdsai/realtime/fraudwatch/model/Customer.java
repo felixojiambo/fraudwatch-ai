@@ -40,4 +40,25 @@ public class Customer {
         Random random = new Random();
         return categories.get(random.nextInt(categories.size()));
     }
+    public Category getUnfrequentCategory() {
+
+        // Get all categories from the enum
+
+        List<Category> allCategories = List.of(Category.values());
+
+        // Filter out frequent categories
+
+        List<Category> infrequentCategories = allCategories.stream()
+
+                .filter(category -> !categories.contains(category))
+
+                .toList();
+
+        // Pick a random category from the remaining ones
+
+        Random random = new Random();
+
+        return infrequentCategories.get(random.nextInt(infrequentCategories.size()));
+
+    }
 }
